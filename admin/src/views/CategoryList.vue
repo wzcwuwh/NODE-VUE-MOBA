@@ -10,7 +10,10 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.row)">编辑</el-button>
+              <el-button
+              size="mini"
+              @click="handleDelete(scope.row)">删除</el-button>
           </template>
     </el-table-column>
     </el-table>
@@ -29,9 +32,27 @@ export default {
       const res = await this.$http.get('categories')
       this.items = res.data
     },
-    handleEdit(index, row){
-      console.log(row._id)
+    handleEdit(row){
       this.$router.push(`/categories/edit/${row._id}`)
+    },
+    handleDelete(row){
+      this.$confirm(`是否确认删除分类 "${row.name}"`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          await this.$http.delete(`/categories/${row._id}`)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.fetch()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
     }
   },
   created() {
