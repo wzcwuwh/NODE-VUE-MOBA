@@ -6,7 +6,14 @@
         </el-table-column>
         <el-table-column prop="name" label="姓名">
         </el-table-column>
-      </el-table>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          </template>
+    </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -21,6 +28,10 @@ export default {
     async fetch(){
       const res = await this.$http.get('categories')
       this.items = res.data
+    },
+    handleEdit(index, row){
+      console.log(row._id)
+      this.$router.push(`/categories/edit/${row._id}`)
     }
   },
   created() {
